@@ -56,14 +56,44 @@ public class EmployeeService {
 
 
     // update the employee ive the id in api
-    public Employee updateEmployeeByApiId(Employee employee , int id){
-        Employee e1=employeeRepository.findById(id).get();
-        e1.setName(employee.getName());
-        e1.setAddress(e1.getAddress());
-        e1.setMobileNumber(employee.getMobileNumber());
-        e1.setDepartment(employee.getDepartment());
-        return employeeRepository.save(e1);
+//    public Employee updateEmployeeByApiId(Employee employee , int id){
+//        Employee e1=employeeRepository.findById(id).get();
+//        e1.setName(employee.getName());
+//        e1.setAddress(e1.getAddress());
+//        e1.setMobileNumber(employee.getMobileNumber());
+//        e1.setDepartment(employee.getDepartment());
+//        return employeeRepository.save(e1);
+//    }
+
+    // partial upate
+    public Employee updateEmployeeByApiId(Employee updatedEmployee, int id) {
+        Employee existingEmployee = employeeRepository.findById(id).orElse(null);
+
+        if (existingEmployee != null) {
+            // Update only non-null fields
+            if (updatedEmployee.getName() != null) {
+                existingEmployee.setName(updatedEmployee.getName());
+            }
+
+            if (updatedEmployee.getAddress() != null) {
+                existingEmployee.setAddress(updatedEmployee.getAddress());
+            }
+
+            if (updatedEmployee.getMobileNumber() != null) {
+                existingEmployee.setMobileNumber(updatedEmployee.getMobileNumber());
+            }
+
+            if (updatedEmployee.getDepartment() != null) {
+                existingEmployee.setDepartment(updatedEmployee.getDepartment());
+            }
+
+            return employeeRepository.save(existingEmployee);
+        } else {
+            // Handle the case where the employee with the given id is not found
+            return null;
+        }
     }
+
 
     // update employee by name
     public  Employee updateEmployeeByName(Employee employee, String name){
